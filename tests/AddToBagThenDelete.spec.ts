@@ -4,7 +4,7 @@ import { ResultPage } from "../models/ResultPage";
 import { SelectedItemPage } from "../models/SelectedItemPage";
 import { CheckoutPage } from "../models/CheckoutPage";
 
-test('Add to bag then delete', async({page}) =>{
+test('Add to bag, Verify then delete', async({page}) =>{
     const home = new HomePage(page);
     const result = new ResultPage(page);
     const item = new SelectedItemPage(page);
