@@ -18,39 +18,39 @@ export class HomePage extends Common{
         modal: '#modal',
         modalXBtn: '#closeButton',
         navBar: '//nav/ul/li',
+        featuredDesigners: '//nav/ul/li[7]/div/section/div[4]/div/div[2]/ul/li',
+        featuredDesignersName: 'xpath=child::a',
         navBarName: 'xpath=child::div/a/span',
         narBarSection: 'xpath=child::div/section/div',
         navBarMenuTitle: 'xpath=child::div/div/h6',
         navBarMenu: 'xpath=child::div/div/ul/li/a',
-        searchItems: "//div[@id='scroll-frame']/div[2]/div",
-        resultsProductID: '',
-        resultsProductName: 'xpath=child::/a/div[2]/div/h2',
-        resultsProductDescription: 'xpath=child::a/div[2]/h2/span',
-        resultsProductOGPrice: 'xpath=child::div/span/span[1]/span',
-        resultsProductDiscountedPrice: 'xpath=child::div/span/span[2]/span',
-        selectedItemProductID: '',
-        selectedItemProductName: '//div/h1/a',
-        selectedItemProductDescription: '//div/h1/span',
-        selectedItemProductOGPrice: "//div[@data-test='pdp-pricing']/div[1]/span[1]",
-        selectedItemProductDiscounterPrice: "//div[@data-test='pdp-pricing']/div[1]/span[2]",
-        addToBagBtn: "//button[text()='Add To Bag']",
     }
 
     async GoToHomePage(){
         await this.GoTo(URL.main, "Home Page");
-        
-        
+        var url = await this.page.url();
+        expect(url).toEqual(URL.main);
     }
 
-    async SelectAndHoverFromNavBar(navigateTo: string){
+    async HoverStoreAndSelect(navBar: string){
+        // This will find all the nav bar elements and it is dynamic if you want to hover other navigation bar
+        var designersName: any [] = [];
+        var designersLink: any [] = [];
         var navBars = await this.FindElements(this.Elements.navBarName, "Nav Bars");
         for(var i = 0; i<navBars.length; i++){
             var navBarNameElement = await this.FindSubElementOnElement(navBars[i], this.Elements.navBarName, "Nav Bar Element");
             var navBarName = await this.GetLiveElementText(navBarNameElement, "Nav Bar Name");
-            if(navBarName.toLowerCase() == navigateTo.toLowerCase()){
-                await this.ElementHover(this.Elements.navBar, "");
+            if(navBarName.toLowerCase() == navBar.toLowerCase()){
+                await this.ElementHover(this.Elements.navBarName, "");
+                //this will store all the featured designers
+                var featuredDesigners = await this.FindElements(this.Elements.featuredDesigners, "Featured Designer");
+                for(var i = 0; i<featuredDesigners.length; i++){
+                    var featuredDesignersElements = await this.FindSubElementOnElement(featuredDesigners[i], this.Elements.featuredDesignersName, "Featured Designers Elements")
+                    var featuredDesignerName = await this.GetLiveElementText(featuredDesignersElements, "Featured Designers Name");
+                    designersName.push(featuredDesignerName);
+                }
+                await this.ClickElement(featuredDesigners[0], "");
             }
         }
-        
     }
-}
+} 
